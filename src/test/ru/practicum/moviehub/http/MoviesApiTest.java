@@ -1,12 +1,10 @@
 package ru.practicum.moviehub.http;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
 import ru.practicum.moviehub.model.Movie;
 import ru.practicum.moviehub.store.MoviesStore;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -66,8 +64,13 @@ class MoviesApiTest {
         String body = response.body();
         assertNotNull(body, "Тело ответа не должно быть null");
 
-        List<Movie> movies = gson.fromJson(body, new ListOfMoviesTypeToken().getType());
-        assertNotNull(movies, "Должен быть список фильмов");
-        assertTrue(movies.isEmpty(), "Список фильмов должен быть пустым");
+        // Проверяем, что это JSON-массив
+        assertTrue(body.startsWith("[") && body.endsWith("]"),
+                "Тело ответа должно быть JSON-массивом");
+
+        // Десериализуем и проверяем, что массив пустой
+        Movie[] movies = gson.fromJson(body, Movie[].class);
+        assertNotNull(movies, "Должен быть массив фильмов");
+        assertEquals(0, movies.length, "Массив фильмов должен быть пустым");
     }
 }
