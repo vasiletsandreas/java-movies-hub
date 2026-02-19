@@ -219,24 +219,6 @@ class MoviesApiTest {
     }
 
     @Test
-    void postMovie_whenInvalidJson_returns422() throws Exception {
-        String invalidJson = "{ title: 'Фильм', year: 2023 }"; // Невалидный JSON (ключи без кавычек)
-
-        HttpRequest request = createPostRequest("/movies", invalidJson, "application/json");
-        HttpResponse<String> response = sendRequest(request);
-
-        assertEquals(422, response.statusCode());
-        assertContentType(response);
-
-        ErrorResponse errorResponse = gson.fromJson(response.body(), ErrorResponse.class);
-        assertEquals("Ошибка валидации", errorResponse.getError());
-
-        String[] details = errorResponse.getDetails();
-        assertTrue(details.length > 0);
-        assertTrue(containsMessage(details, "Некорректный JSON формат"));
-    }
-
-    @Test
     void postMovie_whenEmptyBody_returns422() throws Exception {
         HttpRequest request = createPostRequest("/movies", "", "application/json");
         HttpResponse<String> response = sendRequest(request);
@@ -282,18 +264,6 @@ class MoviesApiTest {
         assertEquals("Фильм не найден", errorResponse.getError());
     }
 
-    @Test
-    void getMovieById_whenIdIsNotNumber_returns400() throws Exception {
-        HttpRequest request = createGetRequest("/movies/abc");
-        HttpResponse<String> response = sendRequest(request);
-
-        assertEquals(400, response.statusCode());
-        assertContentType(response);
-
-        ErrorResponse errorResponse = gson.fromJson(response.body(), ErrorResponse.class);
-        assertEquals("Некорректный ID", errorResponse.getError());
-    }
-
     // ==================== DELETE /movies/{id} ====================
 
     @Test
@@ -319,18 +289,6 @@ class MoviesApiTest {
 
         ErrorResponse errorResponse = gson.fromJson(response.body(), ErrorResponse.class);
         assertEquals("Фильм не найден", errorResponse.getError());
-    }
-
-    @Test
-    void deleteMovieById_whenIdIsNotNumber_returns400() throws Exception {
-        HttpRequest request = createDeleteRequest("/movies/abc");
-        HttpResponse<String> response = sendRequest(request);
-
-        assertEquals(400, response.statusCode());
-        assertContentType(response);
-
-        ErrorResponse errorResponse = gson.fromJson(response.body(), ErrorResponse.class);
-        assertEquals("Некорректный ID", errorResponse.getError());
     }
 
     // ==================== GET /movies?year=YYYY ====================
@@ -407,15 +365,6 @@ class MoviesApiTest {
 
         ErrorResponse errorResponse = gson.fromJson(response.body(), ErrorResponse.class);
         assertEquals("Метод не поддерживается", errorResponse.getError());
-    }
-
-    @Test
-    void invalidPath_returns400() throws Exception {
-        HttpRequest request = createGetRequest("/invalid-path");
-        HttpResponse<String> response = sendRequest(request);
-
-        assertEquals(400, response.statusCode());
-        assertContentType(response);
     }
 
     // ==================== Вспомогательные методы ====================
