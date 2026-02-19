@@ -61,4 +61,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
     protected void sendNoContent(HttpExchange exchange) throws IOException {
         exchange.sendResponseHeaders(204, -1);
     }
+
+    protected void sendInternalServerError(HttpExchange exchange) throws IOException {
+        sendError(exchange, "Внутренняя ошибка сервера", 500);
+    }
 }
