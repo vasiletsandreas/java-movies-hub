@@ -24,17 +24,17 @@ public class MoviesStore {
         return movie;
     }
 
-    public Movie getMovie(Integer id) {
+    public Movie getMovieById(int id) {
         return movies.get(id);
     }
 
-    public boolean deleteMovie(Integer id) {
+    public boolean deleteMovieById(int id) {
         return movies.remove(id) != null;
     }
 
-    public List<Movie> getMoviesByYear(Integer year) {
+    public List<Movie> getMoviesByYear(int year) {
         return movies.values().stream()
-                .filter(movie -> movie.getYear().equals(year))
+                .filter(movie -> movie.getYear() == year)
                 .collect(Collectors.toList());
     }
 

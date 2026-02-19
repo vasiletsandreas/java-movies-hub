@@ -203,8 +203,4 @@ public class MoviesHandler extends BaseHttpHandler {
 
         return errors;
     }
-
-    private void sendInternalServerError(HttpExchange exchange) throws IOException {
-        sendError(exchange, "Внутренняя ошибка сервера", 500);
-    }
 }
